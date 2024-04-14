@@ -7,4 +7,4 @@
     printf("[FUNC:%s][LINE:%d] "format"\n", __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 
-#endif
+#endif //LOGGER_H
