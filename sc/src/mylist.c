@@ -175,3 +175,31 @@ void *get_item_at(LIST *list, size_t index) {
 
     return resultNode->data;
 }
+
+void free_list(LIST *list) {
+
+    node_t *currentNode = NULL;
+    node_t *nextNode = NULL;
+
+    if (list == NULL) {
+        LOG("list is null!");
+        return;
+    }
+
+    currentNode = list->head;
+    while (currentNode != NULL)
+    {
+        nextNode = currentNode->next;
+
+        if (currentNode->data != NULL) {
+            free(currentNode->data);
+            currentNode->data = NULL;
+        }
+        free(currentNode);
+        currentNode = nextNode;
+    }
+
+    free(list);
+
+    return;
+}

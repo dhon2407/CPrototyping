@@ -86,5 +86,7 @@ int main(int argc, char *argv[])
         LOG("Delete failed!");
     }
 
+    free_list(myList);
+
     return 0;
 }
