@@ -24,41 +24,66 @@ int main(int argc, char *argv[])
     int item3 = 19;
     void *dataBuffer = NULL;
 
+    int *data[10] = {0};
+
     myList = create_list();
     if (myList == NULL) {
         LOG("Failed creating list..");
     }
 
-    if (add_to_list(myList, &item1, sizeof(int)) != true) {
+    data[0] = add_to_list(myList, &item1, sizeof(int));
+    if (data[0] == NULL) {
         LOG("Failed adding item to list");
     }
 
-    if (add_to_list(myList, &item2, sizeof(int)) != true) {
+    data[1] = add_to_list(myList, &item2, sizeof(int));
+    if (data[1] == NULL) {
         LOG("Failed adding item to list");
     }
 
-    if (add_to_list(myList, &item3, sizeof(int)) != true) {
+    data[2] = add_to_list(myList, &item3, sizeof(int));
+    if (data[2] == NULL) {
         LOG("Failed adding item to list");
     }
 
-    if (get_list_count(myList, &currentListSize) != -1) {
+    currentListSize = get_list_count(myList);
+    if (currentListSize != -1) {
         LOG("Current list size : %ld", currentListSize);
     }
 
-    if (get_item_at(myList, 0U, &dataBuffer) == true) {
+    dataBuffer = get_item_at(myList, 0U);
+    if (dataBuffer != NULL) {
         LOG("Item at index 0 is :%d", *((int*)dataBuffer));
     }
 
-    if (get_item_at(myList, 1U, &dataBuffer) == true) {
+    dataBuffer = get_item_at(myList, 1U);
+    if (dataBuffer != NULL) {
         LOG("Item at index 1 is :%d", *((int*)dataBuffer));
     }
 
-    if (get_item_at(myList, 2U, &dataBuffer) == true) {
+    dataBuffer = get_item_at(myList, 2U);
+    if (dataBuffer != NULL) {
         LOG("Item at index 2 is :%d", *((int*)dataBuffer));
     }
 
-    if (get_item_at(myList, 3U, &dataBuffer) == true) {
+    dataBuffer = get_item_at(myList, 3U);
+    if (dataBuffer != NULL) {
         LOG("Item at index 3 is :%d", *((int*)dataBuffer));
+    }
+
+    if (delete_from_list(myList, data[0]) == true) {
+        dataBuffer = get_item_at(myList, 2U);
+        if (dataBuffer != NULL) {
+            LOG("Item at index 2 is :%d", *((int*)dataBuffer));
+        }
+
+        dataBuffer = get_item_at(myList, 0U);
+        if (dataBuffer != NULL) {
+            LOG("Item at index 0 is :%d", *((int*)dataBuffer));
+        }
+    }
+    else {
+        LOG("Delete failed!");
     }
 
     return 0;
