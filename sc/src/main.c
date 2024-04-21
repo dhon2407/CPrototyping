@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     int item1 = 7;
     int item2 = 24;
     int item3 = 19;
-    int *printP = NULL;
+    void *dataBuffer = NULL;
 
     myList = create_list();
     if (myList == NULL) {
@@ -45,20 +45,20 @@ int main(int argc, char *argv[])
         LOG("Current list size : %ld", currentListSize);
     }
 
-    if (get_item_at(myList, 0U, (void**)&printP) == true) {
-        LOG("Item at index 0 is :%d", *printP);
+    if (get_item_at(myList, 0U, &dataBuffer) == true) {
+        LOG("Item at index 0 is :%d", *((int*)dataBuffer));
     }
 
-    if (get_item_at(myList, 1U, (void**)&printP) == true) {
-        LOG("Item at index 1 is :%d", *printP);
+    if (get_item_at(myList, 1U, &dataBuffer) == true) {
+        LOG("Item at index 1 is :%d", *((int*)dataBuffer));
     }
 
-    if (get_item_at(myList, 2U, (void**)&printP) == true) {
-        LOG("Item at index 2 is :%d", *printP);
+    if (get_item_at(myList, 2U, &dataBuffer) == true) {
+        LOG("Item at index 2 is :%d", *((int*)dataBuffer));
     }
 
-    if (get_item_at(myList, 3U, (void**)&printP) == true) {
-        LOG("Item at index 3 is :%d", *printP);
+    if (get_item_at(myList, 3U, &dataBuffer) == true) {
+        LOG("Item at index 3 is :%d", *((int*)dataBuffer));
     }
 
     return 0;
