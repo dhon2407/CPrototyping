@@ -115,3 +115,22 @@ folder_path = 'path/to/your/folder'
 divisions = extract_divisions_from_directory(folder_path)
 for line_num, char_pos, division in divisions:
     print(f"Line {line_num}, Character {char_pos + 1}: {division}")
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <folder_path>")
+        sys.exit(1)
+
+    folder_path = sys.argv[1]
+
+    if not os.path.isdir(folder_path):
+        print("Error: Folder not found!")
+        sys.exit(1)
+
+    divisions = extract_divisions_from_directory(folder_path)
+    for line_num, char_pos, division in divisions:
+        print(f"Line {line_num}, Character {char_pos + 1}: {division}")
+
+if __name__ == "__main__":
+    main()
