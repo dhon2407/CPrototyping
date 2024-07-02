@@ -145,15 +145,16 @@ if __name__ == "__main__":
 powershell sleep 1
 adb devices | findstr /c:"emulator-5554" > nul
 if %ERRORLEVEL% equ 0 (
-    echo Device still running
+    @REM echo Device still running
     goto :loopWaitDisconnect
 )
 
 :loopWaitReconnect
+
 powershell sleep 1
 adb devices | findstr /c:"emulator-5554" > nul
 if %ERRORLEVEL% equ 1 (
-    echo Device not yet booted
+    @REM echo Device not yet booted
     goto :loopWaitReconnect
 )
 
