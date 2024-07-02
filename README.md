@@ -142,19 +142,19 @@ if __name__ == "__main__":
 
 :loopWaitDisconnect
 
-powershell sleep 1
+powershell Start-Sleep -m 500
 adb devices | findstr /c:"emulator-5554" > nul
 if %ERRORLEVEL% equ 0 (
-    @REM echo Device still running
+    echo Device still running
     goto :loopWaitDisconnect
 )
 
 :loopWaitReconnect
 
-powershell sleep 1
+powershell Start-Sleep -m 500
 adb devices | findstr /c:"emulator-5554" > nul
 if %ERRORLEVEL% equ 1 (
-    @REM echo Device not yet booted
+    echo Device not yet booted
     goto :loopWaitReconnect
 )
 
