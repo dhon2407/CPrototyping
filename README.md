@@ -136,7 +136,7 @@ if __name__ == "__main__":
     main()
 
 ########## ADB Device checking ##########
-
+```
 @echo off
 @REM Test Batch Script
 
@@ -158,3 +158,4 @@ if %ERRORLEVEL% equ 1 (
 )
 
 echo Device rebooted!
+```
