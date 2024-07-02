@@ -145,7 +145,7 @@ if __name__ == "__main__":
 powershell Start-Sleep -m 500
 adb devices | findstr /c:"emulator-5554" > nul
 if %ERRORLEVEL% equ 0 (
-    echo Device still running
+    echo %DATE:~0,10%%TIME:~0,8% Device still running
     goto :loopWaitDisconnect
 )
 
@@ -154,9 +154,9 @@ if %ERRORLEVEL% equ 0 (
 powershell Start-Sleep -m 500
 adb devices | findstr /c:"emulator-5554" > nul
 if %ERRORLEVEL% equ 1 (
-    echo Device not yet booted
+    echo %DATE:~0,10%%TIME:~0,8% Device not yet booted
     goto :loopWaitReconnect
 )
 
-echo Device rebooted!
+echo %DATE:~0,10%%TIME:~0,8% Device rebooted!
 ```
