@@ -160,3 +160,36 @@ if %ERRORLEVEL% equ 1 (
 
 echo %DATE:~0,10%%TIME:~0,8% Device rebooted!
 ```
+
+python
+```
+import csv
+import re
+import sys
+
+def parse_top_dump(input_file, output_csv):
+    # Define a regex pattern to extract 'Cpu(s)' lines
+    cpu_line_pattern = re.compile(r'^%Cpu\(s\):\s+(\d+\.\d+) us,\s+(\d+\.\d+) sy,\s+(\d+\.\d+) id,')
+
+    with open(input_file, 'r') as infile, open(output_csv, 'w', newline='') as outfile:
+        csv_writer = csv.writer(outfile)
+        csv_writer.writerow(['usr', 'sys', 'idle'])
+
+        for line in infile:
+            match = cpu_line_pattern.match(line)
+            if match:
+                usr = match.group(1)
+                sys = match.group(2)
+                idle = match.group(3)
+                csv_writer.writerow([usr, sys, idle])
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <input_file>")
+        sys.exit(1)
+
+    input_file = sys.argv[1]
+    output_csv = 'cpu_usage.csv'  # Output CSV file
+    parse_top_dump(input_file, output_csv)
+```
+
