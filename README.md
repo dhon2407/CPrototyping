@@ -168,7 +168,7 @@ import re
 import sys
 import os
 
-def parse_top_dump(input_file, csv_writer):
+def parse_top_dump(input_file, csv_writer, folder_name):
     # Define a regex pattern to match 'CPU:' lines in your format
     cpu_line_pattern = re.compile(r'^CPU:\s+([\d.]+)%\s*usr\s+([\d.]+)%\s*sys\s+[\d.]+%\s*nic\s+([\d.]+)%\s*idle')
 
@@ -179,20 +179,21 @@ def parse_top_dump(input_file, csv_writer):
                 usr = match.group(1)
                 sys = match.group(2)
                 idle = match.group(3)
-                # Write data to the aggregated CSV with an additional column for file identification
-                csv_writer.writerow([os.path.basename(input_file), usr, sys, idle])
+                # Write data to the aggregated CSV with an additional column for folder name
+                csv_writer.writerow([folder_name, usr, sys, idle])
 
 def process_files_in_folder(base_folder, output_file):
     with open(output_file, 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile)
-        csv_writer.writerow(['source_file', 'usr', 'sys', 'idle'])  # Header with source file column
+        csv_writer.writerow(['folder_name', 'usr', 'sys', 'idle'])  # Header with folder name column
 
         for root, _, files in os.walk(base_folder):
+            folder_name = os.path.basename(root)
             for file in files:
                 if file.endswith('.txt'):  # Adjust the extension if needed
                     input_file = os.path.join(root, file)
                     print(f"Processing {input_file}")
-                    parse_top_dump(input_file, csv_writer)
+                    parse_top_dump(input_file, csv_writer, folder_name)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
