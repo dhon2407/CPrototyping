@@ -169,7 +169,7 @@ import sys
 
 def parse_top_dump(input_file, output_csv):
     # Define a regex pattern to match lines that contain '%Cpu(s)' information
-    cpu_line_pattern = re.compile(r'^%Cpu\(s\):\s+([\d.]+)\s*us,\s+([\d.]+)\s*sy,\s+([\d.]+)\s*id,')
+    cpu_line_pattern = re.compile(r'^CPU:\s+([\d.]+)%\s*usr\s+([\d.]+)%\s*sys\s+[\d.]+%\s*nic\s+([\d.]+)%\s*idle')
 
     with open(input_file, 'r') as infile, open(output_csv, 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile)
