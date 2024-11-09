@@ -161,7 +161,7 @@ if %ERRORLEVEL% equ 1 (
 echo %DATE:~0,10%%TIME:~0,8% Device rebooted!
 ```
 
-python
+python cpu load
 ```
 import csv
 import re
