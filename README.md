@@ -205,3 +205,45 @@ if __name__ == '__main__':
     process_files_in_folder(base_folder, output_file)
 ```
 
+######## mem usage ########
+```
+import csv
+import re
+import sys
+import os
+
+def parse_mem_dump(input_file, csv_writer, folder_name):
+    # Define a regex pattern to match 'Mem:' lines
+    mem_line_pattern = re.compile(r'^Mem:\s+([\d]+)K\s*used,\s+([\d]+)K\s*free')
+
+    with open(input_file, 'r') as infile:
+        for line in infile:
+            match = mem_line_pattern.match(line)
+            if match:
+                used = match.group(1)
+                free = match.group(2)
+                # Write data to the aggregated CSV with an additional column for folder name
+                csv_writer.writerow([folder_name, used, free])
+
+def process_files_in_folder(base_folder, output_file):
+    with open(output_file, 'w', newline='') as outfile:
+        csv_writer = csv.writer(outfile)
+        csv_writer.writerow(['folder_name', 'used_mem', 'free_mem'])  # Header with folder name column
+
+        for root, _, files in os.walk(base_folder):
+            folder_name = os.path.basename(root)
+            for file in files:
+                if file.endswith('.txt'):  # Adjust the extension if needed
+                    input_file = os.path.join(root, file)
+                    print(f"Processing {input_file}")
+                    parse_mem_dump(input_file, csv_writer, folder_name)
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <base_folder>")
+        sys.exit(1)
+
+    base_folder = sys.argv[1]
+    output_file = 'aggregated_mem_usage.csv'  # Output CSV file for aggregated data
+    process_files_in_folder(base_folder, output_file)
+```
