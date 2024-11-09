@@ -168,34 +168,31 @@ import re
 import sys
 import os
 
-def parse_top_dump(input_file, output_csv):
+def parse_top_dump(input_file, csv_writer):
     # Define a regex pattern to match 'CPU:' lines in your format
     cpu_line_pattern = re.compile(r'^CPU:\s+([\d.]+)%\s*usr\s+([\d.]+)%\s*sys\s+[\d.]+%\s*nic\s+([\d.]+)%\s*idle')
 
-    with open(input_file, 'r') as infile, open(output_csv, 'w', newline='') as outfile:
-        csv_writer = csv.writer(outfile)
-        csv_writer.writerow(['usr', 'sys', 'idle'])
-
+    with open(input_file, 'r') as infile:
         for line in infile:
             match = cpu_line_pattern.match(line)
             if match:
                 usr = match.group(1)
                 sys = match.group(2)
                 idle = match.group(3)
-                csv_writer.writerow([usr, sys, idle])
+                # Write data to the aggregated CSV with an additional column for file identification
+                csv_writer.writerow([os.path.basename(input_file), usr, sys, idle])
 
-def process_files_in_folder(base_folder, output_folder):
-    for root, _, files in os.walk(base_folder):
-        for file in files:
-            if file.endswith('.txt'):  # Adjust the extension if needed
-                input_file = os.path.join(root, file)
-                
-                # Name the CSV based on the containing folder's name
-                folder_name = os.path.basename(root)
-                output_csv = os.path.join(output_folder, f"{folder_name}_cpu_usage.csv")
+def process_files_in_folder(base_folder, output_file):
+    with open(output_file, 'w', newline='') as outfile:
+        csv_writer = csv.writer(outfile)
+        csv_writer.writerow(['source_file', 'usr', 'sys', 'idle'])  # Header with source file column
 
-                print(f"Processing {input_file} -> {output_csv}")
-                parse_top_dump(input_file, output_csv)
+        for root, _, files in os.walk(base_folder):
+            for file in files:
+                if file.endswith('.txt'):  # Adjust the extension if needed
+                    input_file = os.path.join(root, file)
+                    print(f"Processing {input_file}")
+                    parse_top_dump(input_file, csv_writer)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
@@ -203,10 +200,7 @@ if __name__ == '__main__':
         sys.exit(1)
 
     base_folder = sys.argv[1]
-    # Output folder is the directory where this script is being executed
-    output_folder = os.getcwd()
-    process_files_in_folder(base_folder, output_folder)
-
-
+    output_file = 'aggregated_cpu_usage.csv'  # Output CSV file for aggregated data
+    process_files_in_folder(base_folder, output_file)
 ```
 
