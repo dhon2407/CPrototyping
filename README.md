@@ -168,13 +168,14 @@ import re
 import sys
 
 def parse_top_dump(input_file, output_csv):
-    # Define a regex pattern to extract 'Cpu(s)' lines
-    cpu_line_pattern = re.compile(r'^%Cpu\(s\):\s+(\d+\.\d+) us,\s+(\d+\.\d+) sy,\s+(\d+\.\d+) id,')
+    # Define a regex pattern to match lines that contain '%Cpu(s)' information
+    cpu_line_pattern = re.compile(r'^%Cpu\(s\):\s+([\d.]+)\s*us,\s+([\d.]+)\s*sy,\s+([\d.]+)\s*id,')
 
     with open(input_file, 'r') as infile, open(output_csv, 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile)
         csv_writer.writerow(['usr', 'sys', 'idle'])
 
+        # Loop through each line to find matches
         for line in infile:
             match = cpu_line_pattern.match(line)
             if match:
@@ -182,6 +183,9 @@ def parse_top_dump(input_file, output_csv):
                 sys = match.group(2)
                 idle = match.group(3)
                 csv_writer.writerow([usr, sys, idle])
+            else:
+                # Print unmatched lines for debugging
+                print(f"No match: {line.strip()}")
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
