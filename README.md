@@ -184,15 +184,15 @@ def parse_top_dump(input_file, output_csv):
                 idle = match.group(3)
                 csv_writer.writerow([usr, sys, idle])
 
-def process_files_in_folder(base_folder):
+def process_files_in_folder(base_folder, output_folder):
     for root, _, files in os.walk(base_folder):
         for file in files:
-            if file.endswith('.txt'):  # Adjust the extension if your files use a different one
+            if file.endswith('.txt'):  # Adjust the extension if needed
                 input_file = os.path.join(root, file)
                 
-                # Name CSV based on the folder name
+                # Name the CSV based on the containing folder's name
                 folder_name = os.path.basename(root)
-                output_csv = os.path.join(root, f"{folder_name}_cpu_usage.csv")
+                output_csv = os.path.join(output_folder, f"{folder_name}_cpu_usage.csv")
 
                 print(f"Processing {input_file} -> {output_csv}")
                 parse_top_dump(input_file, output_csv)
@@ -203,7 +203,10 @@ if __name__ == '__main__':
         sys.exit(1)
 
     base_folder = sys.argv[1]
-    process_files_in_folder(base_folder)
+    # Output folder is the directory where this script is being executed
+    output_folder = os.getcwd()
+    process_files_in_folder(base_folder, output_folder)
+
 
 ```
 
