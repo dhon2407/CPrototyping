@@ -212,12 +212,19 @@ import re
 import sys
 import os
 
+def clean_line(line):
+    # Remove terminal control characters (e.g., escape sequences)
+    cleaned_line = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
+    return cleaned_line
+
 def parse_mem_dump(input_file, csv_writer, folder_name):
     # Define a regex pattern to match 'Mem:' lines
     mem_line_pattern = re.compile(r'^Mem:\s+([\d]+)K\s*used,\s+([\d]+)K\s*free')
 
     with open(input_file, 'r') as infile:
         for line in infile:
+            # Clean up potential control characters
+            line = clean_line(line)
             match = mem_line_pattern.match(line)
             if match:
                 used = match.group(1)
