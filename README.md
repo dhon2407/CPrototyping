@@ -166,16 +166,16 @@ python
 import csv
 import re
 import sys
+import os
 
 def parse_top_dump(input_file, output_csv):
-    # Define a regex pattern to match lines that contain '%Cpu(s)' information
+    # Define a regex pattern to match 'CPU:' lines in your format
     cpu_line_pattern = re.compile(r'^CPU:\s+([\d.]+)%\s*usr\s+([\d.]+)%\s*sys\s+[\d.]+%\s*nic\s+([\d.]+)%\s*idle')
 
     with open(input_file, 'r') as infile, open(output_csv, 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile)
         csv_writer.writerow(['usr', 'sys', 'idle'])
 
-        # Loop through each line to find matches
         for line in infile:
             match = cpu_line_pattern.match(line)
             if match:
@@ -183,17 +183,27 @@ def parse_top_dump(input_file, output_csv):
                 sys = match.group(2)
                 idle = match.group(3)
                 csv_writer.writerow([usr, sys, idle])
-            else:
-                # Print unmatched lines for debugging
-                print(f"No match: {line.strip()}")
+
+def process_files_in_folder(base_folder):
+    for root, _, files in os.walk(base_folder):
+        for file in files:
+            if file.endswith('.txt'):  # Adjust the extension if your files use a different one
+                input_file = os.path.join(root, file)
+                
+                # Name CSV based on the folder name
+                folder_name = os.path.basename(root)
+                output_csv = os.path.join(root, f"{folder_name}_cpu_usage.csv")
+
+                print(f"Processing {input_file} -> {output_csv}")
+                parse_top_dump(input_file, output_csv)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <input_file>")
+        print(f"Usage: {sys.argv[0]} <base_folder>")
         sys.exit(1)
 
-    input_file = sys.argv[1]
-    output_csv = 'cpu_usage.csv'  # Output CSV file
-    parse_top_dump(input_file, output_csv)
+    base_folder = sys.argv[1]
+    process_files_in_folder(base_folder)
+
 ```
 
